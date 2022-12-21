@@ -38,13 +38,18 @@ if dominio[len(dominio) - 1] == '/': # se entrar aqui é um dominio
     for word in words.readlines():
         word = word.replace('\n','')
         link = str(dominio)+str(word)
-        requisicao = requests.get(link)
-        status = str(requisicao.status_code)
-        if codigo != None:
-            if str(codigo) == status:
+        try:
+            requisicao = requests.get(link)
+            status = str(requisicao.status_code)
+            if codigo != None:
+                if str(codigo) == status:
+                    print(f'{link}')
+            else:
                 print(f'{link}\t[\033[36m{status}\033[0;0m]')
-        else:
-            print(f'{link}\t[\033[36m{status}\033[0;0m]')
+        except requests.Timeout:
+            print(f'A conexão com "{link}" demorou muito para responder')
+
+
 else: # se entrar aqui é uma lista de dominios
     dominios = open(dominio)
     for dominio in dominios.readlines():
